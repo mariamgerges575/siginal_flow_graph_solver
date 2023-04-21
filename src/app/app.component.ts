@@ -4,9 +4,6 @@ import Konva from 'konva';
 import { Globals } from './Globals';
 import { Connection } from './Connection';
 import { Node } from './Node';
-// import { Queue } from './Queue';
-// import { WebSocketAPI } from './WebSocketApi';
-import { Update } from './Update';
 import { HttpClient } from '@angular/common/http';
 import { Shape } from 'konva/lib/Shape';
 import { Line } from 'konva/lib/shapes/Line';
@@ -16,33 +13,11 @@ import { Line } from 'konva/lib/shapes/Line';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'lab5';
+  title = 'SFG';
   modes: number = 0
-  webSocketAPI: any;
+ 
   gain:number=0
   
-
-  sendDataURL = "http://localhost:8080/productconsumer/data"
-  startSimURL = "http://localhost:8080/productconsumer/start"
-  replaySimURL = "http://localhost:8080/productconsumer/replay"
-  stopSimURL = "http://localhost:8080/productconsumer/end"
-
-
-
-
-
-  /**
-   * mode 0:None
-   * mode 1:adding Queue
-   * mode 2:adding Machine
-   * Mode 3:adding Line 
-   * Mode 4:deleting 
-   * mode 5:simuating
-   * mode 6:replaying
-   *  
-   */
-
-
 
   constructor(private httpClient: HttpClient) { }
   ngOninit() {
@@ -154,14 +129,7 @@ export class AppComponent {
         break;
       case 3:
         if (!(Globals.firstShape === -1 || Globals.secondShape === -1)) {
-       
-            // || (Globals.firstShape === 'Qx') || (Globals.secondShape === 'Qi') 
-            // Globals.machines.includes(Globals.firstShape) && Globals.linesOUT.get(Globals.firstShape)?.length===1 ) {
-            // Globals.firstShape = ""
-            // Globals.secondShape = ""
-            // Globals.deletedShape = ""
-            // alert("Unallowed Selection")
-            // return
+ 
           
           var line: Connection = new Connection()
           line.prepareLine()
@@ -338,61 +306,6 @@ export class AppComponent {
 
 
 
-
-
-  
-  // onSim() {
-  //   this.resetQueuesNumbers()
-
-  //   this.connect();
-  //   this.setSimulation()
-  //   this.modes = 5;
-
-  // }
-
-  // setSimulation() {
-  //   this.rate= ((document.getElementById("rateInput") as HTMLInputElement).value);
-  //   if(this.rate ===null || this.rate ===''){
-  //     alert("The default rate is 10!")
-  //     this.rate='10'
-  //   }
-
-  //   var modifiedQ = Globals.stage.findOne('#Qi');
-  //   (<Shape>modifiedQ.findOne('.count')).setAttr('text', this.rate);
-  //   var mapObj = Object.fromEntries(Globals.fromTo)
-  //   var simulationData = {
-  //     queues: Globals.queues,
-  //     machines: Globals.machines,
-  //     fromTo: mapObj
-  //   }
-
-  //   var json = JSON.stringify(simulationData)
-  //   console.log(json);
-  //   this.httpClient.post(this.sendDataURL, json, { responseType: 'text', observe: 'response' }).subscribe((data: any) => {
-  //     this.startSimulation(this.gain)
-  //   })
-  // }
-
-
-
-  startSimulation(startingNum:string){
-    this.httpClient.post(this.startSimURL, startingNum, { responseType: 'text', observe: 'response' }).subscribe((data: any) => {})
-  }
-
-
-
-  // onReplay(){
-  //   this.resetQueuesNumbers()
-  //   this.modes=6
-  //   this.connect()
-  //   var modifiedQ = Globals.stage.findOne('#Qi');
-  //   (<Shape>modifiedQ.findOne('.count')).setAttr('text', this.rate);
-  //   this.httpClient.post(this.replaySimURL, { responseType: 'text', observe: 'response' }).subscribe((data: any) => {
-      
-  //   })  
-  // }
-
-
   resetQueuesNumbers(){
     for(let q of Globals.queues){
       var modifiedQ = Globals.stage.findOne('#' + q);
@@ -440,13 +353,7 @@ export class AppComponent {
     Globals.loopGainsUtil=[]
     Globals.loopsGainMap=new Map<string,number>()
   }
-  // onStop(){
-  //   this.modes=0
-  //   this.httpClient.post(this.stopSimURL, { responseType: 'text', observe: 'response' }).subscribe((data: any) => {
-  //   })  
-  //   this.webSocketAPI._disconnect()
-  //   this.onClear()
-  // }
+
   GetForwardPaths(s:number,d:number){
     let isVisited:boolean[]=[];
     for(let i=0;i<Globals.circleCount+2;i++){
