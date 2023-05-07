@@ -2,7 +2,6 @@ export class Globals{
     static stage: any
     static layer: any
     static points: number[] = []
-    static queues: string[] = []
     static nodes: number []=[]
     static lines: number[] = []
     static LineGain:number
@@ -35,6 +34,5 @@ export class Globals{
     static circleCount: number = 1;
     static rectCount: number = 1;
     static linesCount: number = 1;
-
 
 }

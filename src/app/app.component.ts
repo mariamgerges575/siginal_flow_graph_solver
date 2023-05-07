@@ -2,9 +2,8 @@
 import { Component } from '@angular/core';
 import Konva from 'konva';
 import { Globals } from './Globals';
-import { Connection } from './Connection';
+import { Drawer } from './Drawer';
 import { Node } from './Node';
-import { HttpClient } from '@angular/common/http';
 import { Shape } from 'konva/lib/Shape';
 import { Line } from 'konva/lib/shapes/Line';
 @Component({
@@ -15,16 +14,20 @@ import { Line } from 'konva/lib/shapes/Line';
 export class AppComponent {
   title = 'SFG';
   modes: number = 0
- 
-  gain:number=0
   
+  gain:number=0
 
-  constructor(private httpClient: HttpClient) { }
-  ngOninit() {
 
-  }
+  /**
+   * mode 0:None
+   * mode 2:adding nodes
+   * Mode 3:adding Line 
+   * Mode 4:deleting 
+ 
+   *  
+   */
   ngAfterViewInit() {
-
+    console.log("hello world")
     Globals.stage = new Konva.Stage({
       container: 'container',   // id of container <div>
       width: window.innerWidth
@@ -32,28 +35,10 @@ export class AppComponent {
     });
     Globals.layer = new Konva.Layer();
     Globals.stage.add(Globals.layer);
-
-    // var initials: Queue = new Queue()
-    // initials.initializeQueues()
-    //  var Stomp = require("stompjs/lib/stomp.js").Stomp
-    // this.webSocketAPI = new WebSocketAPI(this);
     var intials: Node=new Node();
     intials.initializeStartEndNodes()
 
   }
-
-
-
-  // onQclick() {
-  //   if (this.modes === 1) {
-  //     this.modes = 0;
-  //     Globals.secondShape=''
-  //     Globals.firstShape=''
-  //     Globals.deletedShape=''
-  //   }
-  //   else
-  //     this.modes = 1;
-  // }
 
   onMclick() {
     if (this.modes === 2) {
@@ -65,7 +50,6 @@ export class AppComponent {
     }
     else
       this.modes = 2;
-      // console.log(Globals.machines);
   }
 
 
@@ -115,8 +99,7 @@ export class AppComponent {
         Globals.firstShape = -1
         Globals.secondShape = -1
         Globals.deletedShape = -1
-        // var queue: Queue = new Queue()
-        // queue.drawRect();
+  
         this.modes = 0
         break;
       case 2:
@@ -129,9 +112,8 @@ export class AppComponent {
         break;
       case 3:
         if (!(Globals.firstShape === -1 || Globals.secondShape === -1)) {
- 
           
-          var line: Connection = new Connection()
+          var line: Drawer = new Drawer()
           line.prepareLine()
           var shape1 = Globals.stage.findOne('#' + Globals.firstShape);
           var shape2 = Globals.stage.findOne('#' + Globals.secondShape);
@@ -159,7 +141,7 @@ export class AppComponent {
             return
           }
            if(Globals.isCircle){
-                //  this.deleteElementFromArray(Globals.machines, Globals.deletedShape);
+                //  this.deleteElementFromArray(Globals.nodes, Globals.deletedShape);
                 Globals.stage.findOne('#' + String(Globals.deletedShape)).destroy()
                  this.deleteConnectionsOfShape(Globals.deletedShape)
               
@@ -188,7 +170,7 @@ export class AppComponent {
       
       case 7:
         if (!(Globals.firstShape === -1 || Globals.secondShape === -1)) {
-        var line: Connection = new Connection()
+        var line: Drawer = new Drawer()
         line.prepareArc()
         var shape1 = Globals.stage.findOne('#' + Globals.firstShape);
         var shape2 = Globals.stage.findOne('#' + Globals.secondShape);
@@ -294,25 +276,6 @@ export class AppComponent {
     }
   }
 
-  handleMessage(str: string) {
-    if(str==='disconnect'){
-      this.webSocketAPI._disconnect()
-      this.modes=0;
-      return
-    }
-    var update = new Update(str)
-    update.execute()
-  }
-
-
-
-  resetQueuesNumbers(){
-    for(let q of Globals.queues){
-      var modifiedQ = Globals.stage.findOne('#' + q);
-      (<Shape>modifiedQ.findOne('.count')).setAttr('text', '0');
-    }
-  }
-
 
 
   onClear(){
@@ -353,7 +316,7 @@ export class AppComponent {
     Globals.loopGainsUtil=[]
     Globals.loopsGainMap=new Map<string,number>()
   }
-
+ 
   GetForwardPaths(s:number,d:number){
     let isVisited:boolean[]=[];
     for(let i=0;i<Globals.circleCount+2;i++){
@@ -438,7 +401,6 @@ export class AppComponent {
  }
 
 removeDoublicates (){
-  console.log("3bt");
   let loops2D:string[][] = Globals.loops.map(sentence => sentence.split(','))
   //let bbb:String[]=[]
   for(let i=0;i<loops2D.length;i++){
@@ -468,8 +430,6 @@ removeDoublicates (){
 
 }
 
-
-
 isTwoNonTouching(cycle1:string[],cycle2:string[]) {
   for (var i = 0; i < cycle1.length; i++){
       for (var j = 0; j < cycle2.length; j++){
@@ -491,7 +451,7 @@ isNonTouching(cycles:string[]){ //give it array of arrays 2 or 3 or .........
   return true;
 }
 
-k_combinations(this:any,array:string[], k:number) {
+k_combinations(this:any,array:string[], k:number){
   var i, j, combs, head, tailcombs;
   if (k > array.length || k <= 0) {
       return [];
@@ -515,7 +475,6 @@ k_combinations(this:any,array:string[], k:number) {
       }
   }
   return combs;
- 
 }
  getNonTouchingLoops(cycles:string[]){
   var i = 1;
@@ -594,23 +553,8 @@ calculateTransferFunction(){
 }
 onSolve(){
   this.GetForwardPaths(0,200);
-  // console.log(Globals.ForwardPaths);
-  // console.log(Globals.ForwardPathsGains);
-  // console.log(Globals.loops);
-  // console.log(Globals.loopGains);
-  // this.removeDoublicates();
-  // console.log(Globals.loops);
-  // console.log(Globals.loopGains);
-  // console.log(this.getNonTouchingLoops(Globals.loops));
-  // console.log(this.calculateDelta(this.getNonTouchingLoops(Globals.loops)))
-  // for(let i=0;i<Globals.ForwardPaths.length;i++){
-  //   console.log(this.calculateDeltaI(Globals.ForwardPaths[i]));
-  // }
-  // console.log(this.calculateTransferFunction());
-  // if(document.getElementById("forwardPaths")!= null){
-  //    document.getElementById("forwardPaths").innerHTML = Globals.ForwardPaths;
-
-  // }
+  this.removeDoublicates();
+ 
   var resultText = document.getElementById('result');
   if(resultText!=null)
     resultText.innerHTML = "overall gain = " + this.calculateTransferFunction();
@@ -634,8 +578,8 @@ onSolve(){
   }
 
       //non touching loops
-    let nonTouchingLoopsResult=this.getNonTouchingLoops(Globals.loops)
-    nonTouchingLoopsResult=nonTouchingLoopsResult.slice(1,nonTouchingLoopsResult.length) 
+    let nonTouchingLoopsResultForAll=this.getNonTouchingLoops(Globals.loops)
+    let nonTouchingLoopsResult=nonTouchingLoopsResultForAll.slice(1,nonTouchingLoopsResultForAll.length) 
     var nonTouchingLoopsText = document.getElementById('nonTouchingLoops');
     if(nonTouchingLoopsText!=null){
       nonTouchingLoopsText.innerHTML = "";
@@ -655,16 +599,22 @@ onSolve(){
     var deltasText = document.getElementById('deltas');
     if(deltasText !=null){
     deltasText.innerHTML = "";
-    deltasText.innerHTML += "&Delta; = " + this.calculateDelta(nonTouchingLoopsResult) + "<br>";
-    console.log(this.GetForwardPaths.length);
-    for (let i = 1; i <= this.GetForwardPaths.length; i++) {
+    deltasText.innerHTML += "&Delta; = " + this.calculateDelta(nonTouchingLoopsResultForAll) + "<br>";
+    console.log(Globals.ForwardPaths.length);
+    for (let i = 1; i <= Globals.ForwardPaths.length; i++) {
         deltasText.innerHTML += "&Delta;" + i + " = " + this.calculateDeltaI(Globals.ForwardPaths[i - 1]).toString() + "<br>";
     }
-  }
+    }
   this.allListsEmpty()
 }
 
+onSave(){
+ window.prompt("enter the ful path")
 
+}
+onLoad(){
+  window.prompt("enter the ful path")
+}
 
 
 }

@@ -6,13 +6,15 @@
       <button class="button"  (click)="onMclick()" >ADD NODE</button>
       <button class="button" (click)="onLclick()" >ADD LINE</button>
       <button class="button" (click)="onCclick()" >ADD CURVED LINE</button>
-      <!-- <button class="btn" (click)="onDelete()" [ngStyle]="{'background-color':modes===4? '#ab47bc' : '#ab47bc'}">DELETE</button>
-      -->
-     
-      <button class="btn" (click)="onClear()">CLEAR ALL</button>
+      
+      <button class="btnDelete" (click)="onDelete()" >DELETE</button>
+      <button class="btnDelete" (click)="onClear()">CLEAR ALL</button>
       <button class="btn" (click)="onSolve()">SOLVE</button>
-     
       <input type="number" name="Gain" id="gainn" placeholder="Gain:" min="1">
+      <div class="sandL">
+        <button class="btnSaveLoad" (click)="onSave()"> Save</button>
+        <button class="btnSaveLoad" (click)="onLoad()">Load</button>
+      </div>
       
   </div>
 
